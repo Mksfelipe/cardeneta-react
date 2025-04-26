@@ -1,8 +1,9 @@
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 
+
 const api = axios.create({
-  baseURL: "http://168.231.94.119:9090/api",
+  baseURL: "https://cardeneta.com:9090/api",
 });
 
 api.interceptors.request.use((config) => {

@@ -1,5 +1,7 @@
 import api from "./axiosInstance";
 
+const API_URL = "https://cardeneta.com:9090/api/";
+
 export async function cadastrarUsuario(dadosUsuario) {
   try {
     const response = await api.post("/auth/signup", dadosUsuario);
@@ -16,7 +18,7 @@ export async function buscarUsuarios(nome = "") {
       ? `/users/search?fullName=${encodeURIComponent(nome)}&sort=updated,desc`
       : "/users?size=9&sort=updated,desc";
 
-    const response = await api.get(endpoint);
+    const response = await api.get(api.get(`${API_URL}/${endpoint}`));
     return response.data.content || response.data;
   } catch (error) {
     console.error("Erro ao buscar usuários:", error.response?.data);
