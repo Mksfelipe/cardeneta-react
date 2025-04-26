@@ -1,7 +1,7 @@
 // src/services/authService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:9090/api/auth";
+const API_URL = "http://168.231.94.119:9090/api/auth";
 
 const login = async (cpf, password) => {
     try {
