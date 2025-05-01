@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "./context/authContext";
 import Login from "./pages/Login";
 import DashboardFiado from "./pages/DashboardFiado";
 import ClienteDetalhes from "./pages/ClienteDetalhes";
+import Compras from "./components/Compras"; // <<< IMPORTANTE: adiciona aqui
 
 // Componente para proteger rotas privadas
 function PrivateRoute({ children }) {
@@ -43,10 +44,17 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/compras"
+        element={
+          <PrivateRoute>
+            <Compras />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }
-
 
 export default function App() {
   return (

@@ -1,6 +1,6 @@
 import api from "./axiosInstance";
 
-const API_URL = "http://168.231.94.119:9090/api/account";
+const API_URL = "https://cardeneta.com:9090/api/account";
 
 export async function buscarTransacoesPorConta(accountId) {
     try {

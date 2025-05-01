@@ -83,16 +83,32 @@ function ClienteDetalhes() {
     const confirmarPagamento = async (e) => {
         e.preventDefault();
         const accountId = cliente?.account?.id;
-        if (!accountId) return;
-
-        try {
-            await pagarTodasTransacoes(accountId, valorRecebido); // <- corrigido aqui
-            setValorRecebido('');
-            setTroco(0);
-            setIsPagamentoModalOpen(false);
-            await fetchDados();
-        } catch (error) {
-            alert("Erro ao pagar todas as transações.");
+        if (!accountId || isNaN(valorRecebido) || valorRecebido <= 0) return;
+    
+        const saldo = cliente.account.balance;
+    
+        if (valorRecebido < saldo) {
+            // Permite pagamento parcial
+            try {
+                await pagarTodasTransacoes(accountId, valorRecebido); // Realiza pagamento parcial
+                setValorRecebido('');
+                setTroco(0);
+                setIsPagamentoModalOpen(false);
+                await fetchDados();
+            } catch (error) {
+                alert("Erro ao realizar pagamento parcial.");
+            }
+        } else if (valorRecebido >= saldo) {
+            // Permite pagamento total
+            try {
+                await pagarTodasTransacoes(accountId, saldo); // Realiza pagamento total
+                setValorRecebido('');
+                setTroco(0);
+                setIsPagamentoModalOpen(false);
+                await fetchDados();
+            } catch (error) {
+                alert("Erro ao realizar pagamento.");
+            }
         }
     };
 
@@ -219,7 +235,6 @@ function ClienteDetalhes() {
                                 type="button"
                                 onClick={confirmarPagamento}
                                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-                                disabled={parseFloat(valorRecebido) < cliente.account.balance}
                             >
                                 Confirmar Pagamento
                             </button>

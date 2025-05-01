@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
                 const decodedToken = jwtDecode(token);  // Decodifica o token
                 const currentTime = Date.now() / 1000;  // Tempo atual em segundos
 
+
+                console.log(decodedToken)
                 // Verifica se o token não expirou
                 if (decodedToken.exp > currentTime) {
                     setAuth(true);
@@ -37,11 +39,27 @@ export const AuthProvider = ({ children }) => {
     const login = async (cpf, password) => {
         try {
             const resposta = await authService.login(cpf, password);
+    
             if (resposta.sucesso) {
                 setAuth(true);
-                navigate("/dashboard"); // Redireciona após login
+    
+                const token = localStorage.getItem("token");
+    
+                if (token) {
+                    const decoded = jwtDecode(token);
+                    const rolesString = decoded.roles || "";
+                    const roles = rolesString.split(","); // Transforma em array
+    
+                    if (roles.includes("ROLE_USER")) {
+                        navigate("/compras");
+                    } else {
+                        navigate("/dashboard");
+                    }
+                } else {
+                    console.error("Token não encontrado");
+                }
             } else {
-                throw new Error(resposta.mensagem); // Lança um erro se falhar
+                throw new Error(resposta.mensagem);
             }
         } catch (error) {
             console.error("Erro ao fazer login:", error);

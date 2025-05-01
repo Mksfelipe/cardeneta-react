@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/authContext"; // Pega o contexto de autenticação
-import { formatarCPF } from "../utils/formatters"; // Utiliza o formatter para CPF
-import authService from "../services/authService";
+import { formatarCPF } from "../utils/formatters.js"; // Utiliza o formatter para CPF
 
 export default function Login() {
     const [cpf, setCpf] = useState("");
@@ -11,15 +10,10 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         // Chama a função login do contexto (que vai utilizar o authService)
         try {
-            const resposta = await authService.login(cpf, senha);
-            if (resposta.sucesso) {
-                login(cpf, senha); // Chama a função login do contexto se o login for bem-sucedido
-            } else {
-                setErro(resposta.mensagem);
-            }
+            login(cpf, senha); // Chama a função login do contexto se o login for bem-sucedido
         } catch (err) {
             setErro("Erro ao tentar realizar o login");
         }
