@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 import ClienteCard from "../components/ClienteCard";
 import ModalNovoCliente from "../components/ModalNovoCliente";
-import { buscarUsuarios } from "../services/UserService";  // Importe a função de busca de usuários
+import { buscarUsuarios } from "../services/UserService";
 
 export default function DashboardFiado() {
   const [busca, setBusca] = useState("");
@@ -12,12 +12,18 @@ export default function DashboardFiado() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
 
-  // Função que carrega os clientes
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   const fetchClientes = async () => {
     setCarregando(true);
     try {
-      const result = await buscarUsuarios(busca);  // Passa o texto da busca para filtrar clientes
-      setClientes(result);  // Atualiza o estado com os clientes encontrados
+      const result = await buscarUsuarios(busca);
+      setClientes(result);
     } catch (error) {
       setErro("Erro ao buscar clientes.");
       console.error("Erro ao buscar clientes:", error);
@@ -26,10 +32,9 @@ export default function DashboardFiado() {
     }
   };
 
-  // Carregar os clientes sempre que a busca mudar
   useEffect(() => {
     fetchClientes();
-  }, [busca]); // Refaz a busca sempre que o texto mudar
+  }, [busca]);
 
   const handleNovoCliente = async () => {
     await fetchClientes();
@@ -38,9 +43,25 @@ export default function DashboardFiado() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
-        <Header
-          abrirModal={() => setMostrarModal(true)}
-        />
+
+        {/* Linha com botões lado a lado */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Painel de Fiado</h1>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setMostrarModal(true)}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-xl transition"
+            >
+              Novo Cliente
+            </button>
+            <button
+              onClick={logout}
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-xl transition"
+            >
+              Sair
+            </button>
+          </div>
+        </div>
 
         <div className="mb-6">
           <input
@@ -59,7 +80,7 @@ export default function DashboardFiado() {
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
               <ClienteCard
-                key={cliente.id} // Garantir chave única
+                key={cliente.id}
                 cliente={cliente}
                 ofuscarValores={ofuscarValores}
               />
@@ -71,14 +92,13 @@ export default function DashboardFiado() {
           )}
         </div>
 
-        <footer className="mt-12 pt-6 border-t border-gray-200">
-        </footer>
+        <footer className="mt-12 pt-6 border-t border-gray-200"></footer>
       </div>
 
       {mostrarModal && (
         <ModalNovoCliente
           onClose={() => setMostrarModal(false)}
-          onSave={handleNovoCliente} // Passa a função para ser chamada após salvar o novo cliente
+          onSave={handleNovoCliente}
         />
       )}
     </div>
