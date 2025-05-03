@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { cadastrarUsuario } from "../services/UserService";
-import { formatarCPF } from "../utils/formatters"; // Utiliza o formatter para CPF
+import { formatarCPF } from "../utils/formatters";
 
 export default function ModalNovoCliente({ onClose, onSave }) {
     const [erro, setErro] = useState("");
@@ -14,7 +14,7 @@ export default function ModalNovoCliente({ onClose, onSave }) {
             firstName: form.firstName.value,
             lastName: form.lastName.value,
             email: form.email.value,
-            cpf: form.cpf.value,
+            cpf: cpf, // usa o estado com o CPF formatado
         };
 
         try {
@@ -26,11 +26,9 @@ export default function ModalNovoCliente({ onClose, onSave }) {
         }
     };
 
-    // Função para formatar o CPF enquanto o usuário digita
     const handleCpfChange = (e) => {
-        const form = e.target;
-        const valorFormatado = formatarCPF(form.cpf.value);
-        console.log(valorFormatado)
+        const rawValue = e?.target?.value || "";
+        const valorFormatado = formatarCPF(rawValue);
         setCpf(valorFormatado);
     };
 
@@ -69,10 +67,11 @@ export default function ModalNovoCliente({ onClose, onSave }) {
                         className="w-full border border-gray-300 rounded-xl px-4 py-2"
                     />
                     <input
+                        name="cpf"
                         type="text"
                         placeholder="CPF"
                         value={cpf}
-                        onChange={handleCpfChange}  // Usando a função para formatar o CPF
+                        onChange={handleCpfChange}
                         className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4"
                         required
                     />
