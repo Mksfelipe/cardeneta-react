@@ -13,7 +13,7 @@ export default function Login() {
 
         // Chama a função login do contexto (que vai utilizar o authService)
         try {
-            login(cpf, senha); // Chama a função login do contexto se o login for bem-sucedido
+            await login(cpf, senha); // Chama a função login do contexto se o login for bem-sucedido
         } catch (err) {
             setErro("Erro ao tentar realizar o login");
         }

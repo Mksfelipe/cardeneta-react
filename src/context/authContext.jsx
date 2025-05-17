@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error(resposta.mensagem);
             }
         } catch (error) {
-            console.error("Erro ao fazer login:", error);
+            throw new Error(resposta.mensagem);
         }
     };
 
